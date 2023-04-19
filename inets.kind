@@ -1,0 +1,19 @@
+Vector.index<X: Type, len: Nat>(vec: Vector<X, len>, elem: X): Nat
+  case len {
+    zero:
+      ?z
+    succ:
+      ?s
+  }!          
+
+type Adjacencia<Aresta: Type, Node: Type>(aridade: Node -> Nat, a: Aresta) {
+   new(
+     node: Node
+     arestas: Vector(Aresta, aridade(node))
+     pos: Nat // Vector.index(Aresta, aridade(node), arestas, a)
+   )
+}
+
+
+
+

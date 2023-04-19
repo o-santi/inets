@@ -1,0 +1,10 @@
+
+
+Ok suponha que a gente tenha um tipo =Aresta: Type= que rotula as arestas e um tipo ~Node: Type~ que rotula os nós. Além disso temos uma função aridade: ~Node -> Nat~ que nos diz quantas portas um nó tem.
+Agora vamos definir a ~Adjacencia(Aresta: Type, Node: Type, aridade: Node -> Nat, a: Aresta)~ ele é um record que tem ~(n: Node, l: Vector Aresta (aridade n), pos: Vector.In Aresta (aridade n) l a)~
+A interaction net é um mapa extensional que mapeia arestas em um par de adjacências
+e ela tem a invariante que se vc pega uma aresta que tá no Vector Aresta (aridade n) e olha ela no mapa, dá o mesmo rótulo pro nó e o mesmo vetor de arestas
+até aí tudo bem
+mas o principal problema é como lidar com os rótulos das arestas, de forma que reescritas em ordens diferentes sejam iguais de verdade
+se fosse só um Nat que vc vai incrementando pra criar aresta nova, não seria igual pq os rótulos seriam diferentes
+é como se a gente precisasse de índices de debruijn pra interaction nts
