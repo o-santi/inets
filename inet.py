@@ -15,7 +15,7 @@ class Label(IntEnum):
             case Label.Zero:  return 0
             case Label.Plus:  return 2
             case Label.Copy:  return 2
-            case Label.Root:  return 0
+            case Label.Value: return 0
             
     def __str__(self) -> str:
         match self:
@@ -86,7 +86,7 @@ class InteractionNet:
                 self.connect_ports(Porta(pls1, 2), Porta(cpy2, 1))
                 self.connect_ports(Porta(pls2, 1), Porta(cpy1, 2))
                 self.connect_ports(Porta(pls2, 2), Porta(cpy2, 2))
-
+                
                 self.delete_node(left)
                 self.delete_node(right)
                 
@@ -116,7 +116,6 @@ class InteractionNet:
             right = self.arestas[left]
             print(f"{left.node.label}({left.node.node_id}) @ {left.port} --> {right.node.label}({right.node.node_id}) @ {right.port}")
 
-            
             
 if __name__ == "__main__":
 
@@ -172,14 +171,58 @@ if __name__ == "__main__":
         inet.connect_ports(Porta(copy, 2), Porta(rot4, 0))
 
         # Zero \               / Erase
-        #       Plus > ~ < Zero
+        #       Plus > ~ < Copy
         # Zero /               \ Erase
+
+        # first becomes
+        # Zero > ~ Copy --- Plus > ~ < Erase
+        #               \ /
+        #                X
+        #               / \        
+        # Zero > ~ Copy --- Plus > ~ < Erase
+        # which then, becomes
+        # Zero > ~ < Erase
+        # Zero > ~ < Erase
+        # Zero > ~ < Erase
+        # Zero > ~ < Erase
+        # which annihilates the whole graph.
         
         inet.normalize()
         assert len(inet.arestas) == 0
         print("plus_into_copy .... OK")
+
+    def naturals(number):
+        
+        inet = InteractionNet()
+
+        left = inet.add_node(Label.Erase)
+        right = inet.add_node(Label.Zero)
+
+        def rec(n, free_left: Porta, free_right: Porta):
+            if n == 0:            
+                zero = inet.add_node(Label.Zero)
+                eras = inet.add_node(Label.Erase)
+                inet.connect_ports(Porta(zero, 0), free_left)
+                inet.connect_ports(Porta(eras, 0), free_right)
+            else:
+                plus = inet.add_node(Label.Plus)
+                copy = inet.add_node(Label.Copy)
+                inet.connect_ports(Porta(copy, 0), free_left)
+                inet.connect_ports(Porta(plus, 0), free_right)
+
+                inet.connect_ports(Porta(copy, 1), Porta(plus, 2))
+                rec(n - 1, Porta(copy, 2), Porta(plus, 1))
+
+        rec(number, Porta(left, 0), Porta(right, 0))
+
+        inet.normalize()
+        # inet.print_arestas()
+
+        assert len(inet.arestas) == 0
+        print(f"naturals({number}) .... OK ")
         
     zero_erased()
     zero_copy_into_erased()
     plus_into_copy()
+    naturals(10)
 
