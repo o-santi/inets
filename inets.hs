@@ -19,6 +19,9 @@ norm ((Aresta (Porta left 0) (Porta right 0))::rest) inet =
 
 norm (_::rest) inet = norm rest inet
 
-rewrite :: InteractionNet -> Node -> Node -> (List Arestas, InteractionNets)
-rewrite inet (Node left_id Erase) (Node right_id erase) = remove
-  
+-- rewrite :: InteractionNet -> Node -> Node -> (List Arestas, InteractionNets)
+-- rewrite inet (Node left_id Erase) (Node right_id erase) = remove
+
+data Cons net_a net_b = ()
+data Inet = Link | Cut net_a net_b | Graft net (node
+
