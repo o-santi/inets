@@ -47,8 +47,7 @@ class InteractionNet:
         
     def normalize(self):
         while (len(self.portas_ativas) > 0):
-            left = self.portas_ativas.pop() # Porta y, Porta z,
-            right = self.arestas[left] # Porta x -> (Porta y)
+            left, right = self.portas_ativas.pop() # Porta y, Porta z,
             self.apply_rewrite(left.node, right.node)
             
     def apply_rewrite(self, left: Node, right: Node) -> bool:
@@ -101,10 +100,11 @@ class InteractionNet:
         self.arestas[left] = right
         self.arestas[right] = left
         if (left.port == right.port == 0): # se as portas estiverem ativas
+            # usa a ordem entre as labels para 
             if (left.node.label < right.node.label):
-                self.portas_ativas.append(left)
+                self.portas_ativas.append((left, right))
             else:
-                self.portas_ativas.append(right)
+                self.portas_ativas.append((right, left))
             
     def delete_node(self, node: Node):
         for i in range(node.label.arity() + 1):
@@ -224,5 +224,5 @@ if __name__ == "__main__":
     zero_erased()
     zero_copy_into_erased()
     plus_into_copy()
-    naturals(10)
+    naturals(500)
 
