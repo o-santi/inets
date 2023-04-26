@@ -15,7 +15,7 @@ class Label(IntEnum):
             case Label.Zero:  return 0
             case Label.Plus:  return 2
             case Label.Copy:  return 2
-            case Label.Value: return 0
+            case Label.Root:  return 0
             
     def __str__(self) -> str:
         match self:
